@@ -7,9 +7,10 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', credentialsId: 'github-cred', url: 'https://github.com/tuusuario/springboot-ci-demo.git'
+                git branch: 'main', credentialsId: '12345', url: 'https://github.com/jhans10/product_crud.git'
             }
         }
+
         stage('Build') {
             steps {
                 sh './mvnw clean package -DskipTests'
