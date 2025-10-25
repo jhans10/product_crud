@@ -1,13 +1,7 @@
 pipeline {
-    agent {
-        docker {
-            image 'maven:3.9.9-eclipse-temurin-21'
-            args '-v $HOME/.m2:/root/.m2'
-        }
-    }
+    agent any
 
     stages {
-
         stage('Checkout') {
             steps {
                 cleanWs()
@@ -15,31 +9,32 @@ pipeline {
             }
         }
 
-        stage('Build App JAR inside Dockerfile') {
+        stage('Build Docker Image') {
             steps {
                 sh 'docker build -t product-crud .'
             }
         }
 
-        stage('Run Container Test') {
+        stage('Run Container') {
             steps {
-                sh 'docker run -d -p 8081:8081 --name product-crud-container product-crud'
+                sh 'docker rm -f product-crud-container || true'
+                sh 'docker run -d --name product-crud-container -p 8081:8081 product-crud'
             }
         }
 
         stage('Deploy') {
             steps {
-                echo '🚀 Imagen Docker de Quarkus construida y ejecutada correctamente'
+                echo '🚀 Quarkus Docker image built & running'
             }
         }
     }
 
     post {
         success {
-            echo '✅ Pipeline ejecutado correctamente'
+            echo "✅ Pipeline ejecutado correctamente"
         }
         failure {
-            echo '❌ Pipeline falló'
+            echo "❌ Pipeline falló"
         }
     }
 }
