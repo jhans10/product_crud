@@ -26,6 +26,7 @@ public class ProductResource {
     @POST
     public Response create(@Valid Product product) {
         Product created = service.create(product);
+        System.out.println(created);
         return Response.status(Response.Status.CREATED).entity(created).build();
     }
 

@@ -4,21 +4,25 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                cleanWs()
-                git branch: 'main', credentialsId: '12345', url: 'https://github.com/jhans10/product_crud.git'
+
+                git branch: 'master', credentialsId: '12345', url: 'https://github.com/jhans10/product_crud.git'
+
+                sh 'ls -la'
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t product-crud .'
+            sh 'docker build -t product-crud .'
+
             }
         }
 
         stage('Run Container') {
             steps {
                 sh 'docker rm -f product-crud-container || true'
-                sh 'docker run -d --name product-crud-container -p 8081:8081 product-crud'
+                 sh 'docker run -d -p 0:8081 --name product-crud-container product-crud'
+
             }
         }
 
